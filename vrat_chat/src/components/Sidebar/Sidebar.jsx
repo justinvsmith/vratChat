@@ -15,7 +15,7 @@ export default function Sidebar(){
     const [{user}, dispatch] = useStateValue();
 
     useEffect(() => {
-        axios.get('http://localhost:8000/api/rooms')
+        axios.get('http://localhost:8001/api/rooms')
             .then(res => {
                 setRooms(res.data)
             })

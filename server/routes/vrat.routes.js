@@ -1,8 +1,12 @@
-const roomController = require('../controllers/room.controller');
+const ChatController = require('../controllers/chat.controller');
 
 module.exports = app => {
-    app.get('/api/rooms', roomController.getRooms);
-    app.get('/api/rooms/:id', roomController.getRoom);
-    app.post('/api/rooms', roomController.createRoom);
-    app.delete('/api/rooms/:roomidId', roomController.deleteRoom);
+    app.post('/api/rooms', ChatController.createRoom);
+    app.post('/api/rooms/:id', ChatController.newMessage);
+    app.get('/api/rooms/:id', ChatController.getARoom);
+    app.get('/api/rooms', ChatController.getRooms);
+    app.get('/api/messages', ChatController.getMessages);
+    app.delete('/api/messages/:id', ChatController.deleteMessages);
+    app.get('/api/rooms/:id/messages', ChatController.getMessagesInRoom);
+    app.get('/api/rooms/:id/users', ChatController.getUsersInRoom);
 }

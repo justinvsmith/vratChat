@@ -11,11 +11,11 @@ import { useParams } from 'react-dom';
 
 export default function Chat({roomId}){
 
-    const [input, setInput] = useState("");
+    const [message, setMessage] = useState("");
     const [room, setRoom] = useState("");
 
     useEffect(() => {
-        axios.get('http://localhost:8000/api/rooms/' + roomId)
+        axios.get('http://localhost:8001/api/rooms/' + roomId)
             .then(res => {
                 setRoom(res.data)
             });
@@ -25,8 +25,13 @@ export default function Chat({roomId}){
 
     const sendMessage = (e) => {
         e.preventDefault();
-        console.log('you typed:', input)
-        setInput('');
+        console.log('you typed:', message)
+        setMessage('');
+        axios.post('http://localhost:8001/api/rooms/' + roomId, {
+            user,
+            message
+        })
+        
     }
 
     return(
@@ -63,8 +68,8 @@ export default function Chat({roomId}){
                 <form>
                     <input type="text" 
                         placeholder="Type a message" 
-                        value={input} 
-                        onChange={(e) => setInput(e.target.value)} />
+                        value={message} 
+                        onChange={(e) => setMessage(e.target.value)} />
                     <button onClick={sendMessage} type="submit">Send Message</button>
                 </form>
                 <IconButton>

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/vratdb', {
+mongoose.connect('mongodb://localhost/vratChat', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false

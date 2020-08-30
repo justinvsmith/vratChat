@@ -15,7 +15,7 @@ export default function SidebarChat({ addNewChat, rooms }){
         const name = prompt('Please enter a name for chat')
 
         if (name){
-            axios.post('http://localhost:8000/api/rooms',{
+            axios.post('http://localhost:8001/api/rooms',{
                 name
             })
                 .then(() => navigate('/'))
