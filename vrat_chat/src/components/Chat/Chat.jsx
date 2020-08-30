@@ -7,31 +7,57 @@ import MoreVertical from '@material-ui/icons/MoreVert';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import MicIcon from '@material-ui/icons/Mic';
-import { useParams } from 'react-dom';
+import moment from 'moment';
+import { useStateValue } from '../../StateProvider';
+import io from 'socket.io-client';
+import { set } from 'mongoose';
 
 export default function Chat({roomId}){
 
     const [message, setMessage] = useState("");
     const [room, setRoom] = useState("");
+    const [messages, setMessages] = useState([]);
+    const[{user}, dispatch] = useStateValue("");
+    const [socket] = useState(() => io(':8001'));
 
     useEffect(() => {
         axios.get('http://localhost:8001/api/rooms/' + roomId)
             .then(res => {
                 setRoom(res.data)
             });
+        
+        axios.get('http://localhost:8001/api/rooms/' + roomId + '/messages')
+            .then(res => {
+                setMessages(res.data)
+            });
     }, [roomId])
 
-    console.log(roomId);
+    useEffect(() => {
+        console.log(socket);
+        socket.emit('join', room.name)
+
+        return () => socket.disconnect();
+    }, [socket])
+
+    useEffect(() => {
+        socket.on('message', (message) => {
+            setMessages([...messages, message]);
+        })
+    }, [messages])
 
     const sendMessage = (e) => {
         e.preventDefault();
         console.log('you typed:', message)
         setMessage('');
+
+        if(message){
+        socket.emit('sendMessage', message, () => setMessage(''));
+        }
+
         axios.post('http://localhost:8001/api/rooms/' + roomId, {
-            user,
+            user: user.displayName,
             message
         })
-        
     }
 
     return(
@@ -55,11 +81,13 @@ export default function Chat({roomId}){
                 </div>
             </div>
             <div className="chat_body">
-                <p className={`chat_message ${true && "chat_receiver"}`}>
-                    <span className="chat_name">Justin Smith</span>
-                    Hey Guys
-                    <span className="chat_timestamp">3:50pm</span>
+                {messages.map((message, idx) => (
+                    <p key={idx} className={`chat_message ${message.user === user.displayName && "chat_receiver"}`}>
+                    <span className="chat_name">{message.user}</span>
+                    {message.message}
+                    <span className="chat_timestamp">{moment(message.createdAt).format('h:mm:ss a')}</span>
                 </p>
+                ))}
             </div>
             <div className="chat_footer">
                 <IconButton>

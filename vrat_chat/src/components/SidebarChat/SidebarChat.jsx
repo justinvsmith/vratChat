@@ -26,11 +26,12 @@ export default function SidebarChat({ addNewChat, rooms }){
     return !addNewChat ? (
         <>
         {rooms.map((room, idx) => {
-        return <Link to={`/rooms/${room._id}`}>
-            <div  key={idx}className="sidebarChat">
+        return <Link to={`/rooms/${room._id}`} key={idx}>
+            <div  className="sidebarChat">
                 <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
             <div className="sidebarChat_info">
                         <h2>{room.name}</h2>
+                        <p>{rooms[2].message}</p>
                         <p>last message ...</p>
                     </div>
         </div>

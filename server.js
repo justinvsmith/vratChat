@@ -13,3 +13,15 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 require('./server/routes/vrat.routes')(app);
+
+let connectedClients = 0;
+
+io.on('connect', socket => {
+    connectedClients ++;
+    console.log('Somone has joined', `We have ${connectedClients} online`)
+
+    socket.on('disconnect', () =>{
+        connectedClients --;
+        console.log('Someone has logged off.', `We have now have ${connectedClients} online`)
+    })
+})
