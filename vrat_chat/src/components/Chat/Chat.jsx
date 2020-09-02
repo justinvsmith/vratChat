@@ -10,6 +10,7 @@ import MicIcon from '@material-ui/icons/Mic';
 import moment from 'moment';
 import { useStateValue } from '../../StateProvider';
 import io from 'socket.io-client';
+import ScrollToBottom from 'react-scroll-to-bottom';
 import { set } from 'mongoose';
 
 export default function Chat({roomId}){
@@ -19,8 +20,6 @@ export default function Chat({roomId}){
     const [messages, setMessages] = useState([]);
     const[{user}, dispatch] = useStateValue("");
     const [socket] = useState(() => io(':8001'));
-
-
 
     useEffect(() => {
         axios.get('http://localhost:8001/api/rooms/' + roomId)
@@ -49,18 +48,21 @@ export default function Chat({roomId}){
 
     const sendMessage = (e) => {
         e.preventDefault();
-        console.log('you typed:', message)
-        setMessage('');
+        console.log(`${user.displayName} typed:`, message)
+        
 
         if(message){
-        socket.emit('chatMessage', message);
+        socket.emit('chatMessage', message, user.displayName);
         }
 
         axios.post('http://localhost:8001/api/rooms/' + roomId, {
             user: user.displayName,
             message
         })
+        console.log(message);
+        setMessage('');
     }
+
 
     return(
         <div className="chat"> 
@@ -82,7 +84,7 @@ export default function Chat({roomId}){
                     </IconButton>
                 </div>
             </div>
-            <div className="chat_body">
+            <ScrollToBottom className="chat_body">
                 {messages.map((message, idx) => (
                     <p key={idx} className={`chat_message ${message.user === user.displayName && "chat_receiver"}`}>
                     <span className="chat_name">{message.user}</span>
@@ -90,7 +92,7 @@ export default function Chat({roomId}){
                     <span className="chat_timestamp">{moment(message.createdAt).format('h:mm:ss a')}</span>
                 </p>
                 ))}
-            </div>
+            </ScrollToBottom>
             <div className="chat_footer">
                 <IconButton>
                     <InsertEmoticonIcon className="iconColor" />
@@ -109,3 +111,6 @@ export default function Chat({roomId}){
         </div>
     )
 }
+
+
+

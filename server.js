@@ -26,7 +26,7 @@ io.on('connect', socket => {
         console.log('Someone has logged off.', `We have now have ${connectedClients} online`)
     });
 
-    socket.on('chatMessage', (message) => {
-        io.emit('message', {message});
+    socket.on('chatMessage', (message, user) => {
+        io.emit('message', {message, user});
     })
 })
