@@ -31,7 +31,7 @@ export default function SidebarChat({ addNewChat, rooms }){
                 <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
             <div className="sidebarChat_info">
                         <h2>{room.name}</h2>
-                        <p>{rooms[2].message}</p>
+                        {/* <p>{rooms[2].message}</p> */}
                         <p>last message ...</p>
                     </div>
         </div>

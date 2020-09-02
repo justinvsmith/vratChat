@@ -20,6 +20,8 @@ export default function Chat({roomId}){
     const[{user}, dispatch] = useStateValue("");
     const [socket] = useState(() => io(':8001'));
 
+
+
     useEffect(() => {
         axios.get('http://localhost:8001/api/rooms/' + roomId)
             .then(res => {
@@ -51,7 +53,7 @@ export default function Chat({roomId}){
         setMessage('');
 
         if(message){
-        socket.emit('sendMessage', message, () => setMessage(''));
+        socket.emit('chatMessage', message);
         }
 
         axios.post('http://localhost:8001/api/rooms/' + roomId, {

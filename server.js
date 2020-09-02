@@ -3,6 +3,7 @@ const sockets = require('socket.io');
 const app = express();
 const cors = require('cors');
 
+
 const server = app.listen(8001);
 
 const io = sockets(server);
@@ -23,5 +24,9 @@ io.on('connect', socket => {
     socket.on('disconnect', () =>{
         connectedClients --;
         console.log('Someone has logged off.', `We have now have ${connectedClients} online`)
+    });
+
+    socket.on('chatMessage', (message) => {
+        io.emit('message', {message});
     })
 })
